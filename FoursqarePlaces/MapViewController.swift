@@ -9,8 +9,10 @@ import UIKit
 import MapKit
 
 class MapViewController: UIViewController {
-
+    
     private var userLocationManager = UserLocationManager.shared
+    var builder = FoursquareAPIBuilder()
+    var dataFetcher = NetworkDataFetcher.shared
     
     //MARK: - IBOutlets
     
@@ -23,15 +25,15 @@ class MapViewController: UIViewController {
     }
     
     // Setup VC
-        func setupMapViewController() {
-            mapView.showsUserLocation = true
-            centerMapOnUserLocation()
-            
-        }
+    func setupMapViewController() {
+        mapView.showsUserLocation = true
+        centerMapOnUserLocation()
+        
+    }
     
     //Get User Location
     func getUserLocation(completion: @escaping (CLLocationCoordinate2D?) -> ()) {
-               
+        
         userLocationManager.requestAccess { [userLocationManager] isSuccess in
             
             guard isSuccess else {
@@ -39,19 +41,34 @@ class MapViewController: UIViewController {
                 return
             }
             
-            userLocationManager.getLocation { (location) in
+            userLocationManager.getLocation { [weak self] (location) in
                 completion(location)
+                
+                guard let location = location else { return }
+                
+                self?.builder.setLocation(longitude: location.longitude, latitude: location.latitude)
+                self?.builder.setVenue(type: .coffee)
+                
+                guard let api = self?.builder.buildFoursquareAPI() else { return }
+                
+                self?.dataFetcher.fetchCategories(api: api) { response in
+                    
+                    print(response)
+                }
+                
+                
             }
         }
     }
-
+    
+    
     // Center Map on user location
     func centerMapOnUserLocation() {
         
         getUserLocation { [mapView] location in
             
             guard let location = location else { return }
-            
+                                
             let regionRadius: CLLocationDistance = 1000
             
             let region = MKCoordinateRegion(center: location,
@@ -61,8 +78,7 @@ class MapViewController: UIViewController {
             mapView!.setRegion(region, animated: true)
             
         }
-      
+        
     }
-   
 }
 
