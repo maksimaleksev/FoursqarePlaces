@@ -16,6 +16,7 @@ class MapViewController: UIViewController {
     private var isMapViewLoadMap = false
     private let disposedBag = DisposeBag()
     private var viewModel: MapViewModel = MapViewModel()
+    private let annotationIdentifier = "VenueAnnotation"
     
     //MARK: - IBOutlets
     
@@ -29,6 +30,11 @@ class MapViewController: UIViewController {
         
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        setupAnnotations()
+    }
+    
     //MARK: - VC Methods
     
     //Setup VC
@@ -36,7 +42,6 @@ class MapViewController: UIViewController {
         mapView.showsUserLocation = true
         mapView.delegate = self
         setUserLocationOnMapView()
-        setupAnnotations()
     }
     
     //Setup user location on the mapView
@@ -56,14 +61,44 @@ class MapViewController: UIViewController {
     
     //Setup annotations
     func setupAnnotations() {
-        viewModel.venues.asDriver().drive { print($0) }.disposed(by: disposedBag)
+        viewModel.venues.asDriver().drive { venues in
+            
+            venues.forEach {[unowned self] venue in
+                
+                let builder = AnnotationBuilder()
+                builder.setAnnotationTitle(venue.name)
+                builder.setAnnotationCoordinate(latitude: venue.location.lat, longitude: venue.location.lng)
+                guard let annotation = builder.makeAnnotation() else { return }
+                self.mapView.addAnnotation(annotation)
+                
+            }
+            
+        }.disposed(by: disposedBag)
         
     }
 }
 
+
+//MARK: - MKMapViewDelegate
 extension MapViewController: MKMapViewDelegate {
     
     func mapViewDidFinishLoadingMap(_ mapView: MKMapView) {
         isMapViewLoadMap = true
+    }
+    
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        
+        guard annotation is MKPointAnnotation else { return nil }
+        
+        var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: annotationIdentifier)
+        
+        if annotationView == nil {
+            annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: annotationIdentifier)
+            annotationView!.canShowCallout = true
+        } else {
+            annotationView!.annotation = annotation
+        }
+        
+        return annotationView
     }
 }

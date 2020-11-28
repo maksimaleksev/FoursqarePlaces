@@ -20,7 +20,7 @@ internal class MapViewModel{
     
     //MARK: - Constants
     //Region radius for map
-    private let regionRadius: CLLocationDistance = 1000
+    private let regionRadius: CLLocationDistance = 3000
     
     //Accuracy region need to determine when to request new venues
     private let accuracyRegionRadius: CLLocationDistance = 100
