@@ -7,7 +7,7 @@
 
 import Foundation
 
-class NetworkDataFetcher {
+internal final class NetworkDataFetcher {
     
     static let shared = NetworkDataFetcher()
     
@@ -23,7 +23,6 @@ class NetworkDataFetcher {
                 do {
                     
                     let requestResponse = try JSONDecoder().decode(VenueResponse.self, from: data)
-                    print(requestResponse)
                     response(requestResponse)
                     
                 } catch let jsonError {

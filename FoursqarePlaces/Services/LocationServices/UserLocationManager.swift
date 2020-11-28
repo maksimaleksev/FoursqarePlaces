@@ -7,37 +7,27 @@
 
 import Foundation
 import CoreLocation
+import RxSwift
+import RxCocoa
 
 internal final class UserLocationManager: NSObject {
-          
-    static let shared = UserLocationManager()
     
     private var locationManager = CLLocationManager()
     
-    var isEnabled: Bool { return CLLocationManager.isEnabled }
-    var canRequestAccess: Bool { return CLLocationManager.canRequestService}
+    //Check app access to location service
+    var isAccess = BehaviorRelay<Bool>(value: false)
     
-       
-    typealias AccessRequestBlock = (Bool) -> ()
-    typealias LocationRequestBlock = (CLLocationCoordinate2D?) -> ()
+    //Getting current location
+    var currentLocation: BehaviorRelay<CLLocation> = BehaviorRelay(value: CLLocation())
     
-    private var accessRequestCompletion: AccessRequestBlock?
-    private var locationRequestCompletion: LocationRequestBlock?
+    private var isEnabled: Bool { return CLLocationManager.isEnabled }
+    private var canRequestAccess: Bool { return CLLocationManager.canRequestService}
     
-        
-    override init() {
+   override init() {
         super.init()
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
-    }
-    
-    func requestAccess(completion: AccessRequestBlock?) {
-        accessRequestCompletion = completion
         locationManager.requestWhenInUseAuthorization()
-    }
-    
-    func getLocation(completion: LocationRequestBlock?) {
-        locationRequestCompletion = completion
         locationManager.startUpdatingLocation()
     }
 }
@@ -45,22 +35,18 @@ internal final class UserLocationManager: NSObject {
 
 //MARK: - CLLocationManagerDelegate
 extension UserLocationManager: CLLocationManagerDelegate {
-             
-        func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
-            print(status)
-            accessRequestCompletion?(isEnabled)
-        }
-        
-        func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-            guard let location = manager.location?.coordinate else { return }
-            locationRequestCompletion?(location)
-            locationRequestCompletion = nil
-            //manager.stopUpdatingLocation()
-        }
-        
-        func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-            manager.stopUpdatingLocation()
-            locationRequestCompletion?(nil)
-            locationRequestCompletion = nil
-        }     
+    
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        isAccess.accept(isEnabled)
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard let location = manager.location else { return }
+        currentLocation.accept(location)
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        manager.stopUpdatingLocation()
+        print("Error while determinating position \(error)")
+    }
 }

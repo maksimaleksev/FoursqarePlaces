@@ -7,16 +7,21 @@
 
 import UIKit
 import MapKit
+import RxSwift
 
 class MapViewController: UIViewController {
     
-    private var userLocationManager = UserLocationManager.shared
-    var builder = FoursquareAPIBuilder()
-    var dataFetcher = NetworkDataFetcher.shared
+    //MARK: - Services var
+    
+    private var isMapViewLoadMap = false
+    private let disposedBag = DisposeBag()
+    private var viewModel: MapViewModel = MapViewModel()
     
     //MARK: - IBOutlets
     
     @IBOutlet weak var mapView: MKMapView!
+    
+    //MARK: - Lifecycle methods
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,61 +29,41 @@ class MapViewController: UIViewController {
         
     }
     
-    // Setup VC
+    //MARK: - VC Methods
+    
+    //Setup VC
     func setupMapViewController() {
         mapView.showsUserLocation = true
-        centerMapOnUserLocation()
-        
+        mapView.delegate = self
+        setUserLocationOnMapView()
+        setupAnnotations()
     }
     
-    //Get User Location
-    func getUserLocation(completion: @escaping (CLLocationCoordinate2D?) -> ()) {
+    //Setup user location on the mapView
+    func setUserLocationOnMapView() {
         
-        userLocationManager.requestAccess { [userLocationManager] isSuccess in
+        viewModel.userLocation.asDriver().drive { [unowned self] userLocation in
+            guard let mapView = self.mapView, self.isMapViewLoadMap else { return }
             
-            guard isSuccess else {
-                completion(nil)
-                return
+            if let region = viewModel.makeMapViewRegion(for: userLocation){
+                mapView.setCenter(userLocation.coordinate, animated: true)
+                mapView.setRegion(region, animated: true)
             }
             
-            userLocationManager.getLocation { [weak self] (location) in
-                completion(location)
-                
-                guard let location = location else { return }
-                
-                self?.builder.setLocation(longitude: location.longitude, latitude: location.latitude)
-                self?.builder.setVenue(type: .coffee)
-                
-                guard let api = self?.builder.buildFoursquareAPI() else { return }
-                
-                self?.dataFetcher.fetchCategories(api: api) { response in
-                    
-                    print(response)
-                }
-                
-                
-            }
-        }
+        }.disposed(by: disposedBag)
     }
     
     
-    // Center Map on user location
-    func centerMapOnUserLocation() {
-        
-        getUserLocation { [mapView] location in
-            
-            guard let location = location else { return }
-                                
-            let regionRadius: CLLocationDistance = 1000
-            
-            let region = MKCoordinateRegion(center: location,
-                                            latitudinalMeters: regionRadius,
-                                            longitudinalMeters: regionRadius)
-            
-            mapView!.setRegion(region, animated: true)
-            
-        }
+    //Setup annotations
+    func setupAnnotations() {
+        viewModel.venues.asDriver().drive { print($0) }.disposed(by: disposedBag)
         
     }
 }
 
+extension MapViewController: MKMapViewDelegate {
+    
+    func mapViewDidFinishLoadingMap(_ mapView: MKMapView) {
+        isMapViewLoadMap = true
+    }
+}

@@ -7,7 +7,7 @@
 
 import Foundation
 
-class NetworkService {
+internal final class NetworkService {
     
     static let shared = NetworkService()
     

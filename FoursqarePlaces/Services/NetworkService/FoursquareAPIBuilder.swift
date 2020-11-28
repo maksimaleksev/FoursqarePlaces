@@ -18,10 +18,10 @@ internal class FoursquareAPIBuilder: FoursquareAPIBuilderProtocol {
     
     //MARK: - Constants for API
     
-    let clientID = "JLMXOP3VWT5E3WKUWG1MRD1OLTX0VNX1J5SLV205U3GAFVSS"
-    let clientSecret = "RDVGOPEJDXGMPZUESRFU3JT0IIY5NGX4CBFT0X1W3J4TNNCW"
-    let v = "20201030"
-    let locale = "ru"
+    private let clientID = "JLMXOP3VWT5E3WKUWG1MRD1OLTX0VNX1J5SLV205U3GAFVSS"
+    private let clientSecret = "RDVGOPEJDXGMPZUESRFU3JT0IIY5NGX4CBFT0X1W3J4TNNCW"
+    private let v = "20201030"
+    private let locale = "ru"
     
     //MARK: - Variables for API
     
@@ -31,21 +31,26 @@ internal class FoursquareAPIBuilder: FoursquareAPIBuilderProtocol {
 
     
     //MARK: - Methods
+    
+    //Reset builder
     private func reset() {
         self.location = CLLocationCoordinate2D()
         self.type = nil
         self.urlComponents = URLComponents()
     }
     
+    //Set user location
     func setLocation(longitude: Double, latitude: Double) {
         self.location.longitude = longitude
         self.location.latitude = latitude
     }
     
+    //Set VenueType
     func setVenue(type: VenueType) {
         self.type = type
     }
-
+    
+    //Build build request for API Foursquare
     func buildFoursquareAPI() -> FoursquareAPI? {
         guard let type = type else {
             print("Can't build URL cause ShopType doesn't set")
