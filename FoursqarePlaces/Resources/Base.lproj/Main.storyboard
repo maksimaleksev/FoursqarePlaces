@@ -30,7 +30,7 @@
                             <constraint firstItem="24d-Ni-MRD" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="ymo-A3-TFi"/>
                         </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Map" id="jQM-H4-vDK"/>
+                    <tabBarItem key="tabBarItem" title="Карта" image="map" landscapeImage="map" selectedImage="map" id="jQM-H4-vDK"/>
                     <connections>
                         <outlet property="mapView" destination="24d-Ni-MRD" id="10s-0O-fwL"/>
                     </connections>
@@ -39,21 +39,56 @@
             </objects>
             <point key="canvasLocation" x="1005.7971014492755" y="93.75"/>
         </scene>
-        <!--Settings-->
+        <!--Настройки-->
         <scene sceneID="ViO-0o-L8q">
             <objects>
-                <viewController id="NiA-PM-iWw" sceneMemberID="viewController">
+                <viewController id="NiA-PM-iWw" customClass="SettingsViewController" customModule="FoursqarePlaces" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="grL-sB-FWH">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RUA-hd-hD7">
+                                <rect key="frame" x="0.0" y="76" width="414" height="216"/>
+                                <connections>
+                                    <outlet property="dataSource" destination="NiA-PM-iWw" id="TdR-yI-trb"/>
+                                    <outlet property="delegate" destination="NiA-PM-iWw" id="Dtc-vw-mPW"/>
+                                </connections>
+                            </pickerView>
+                            <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vud-vl-csU">
+                                <rect key="frame" x="171" y="310" width="72" height="32"/>
+                                <color key="backgroundColor" red="0.15866253281121434" green="0.42657010629079972" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="72" id="D1J-zi-9uM"/>
+                                    <constraint firstAttribute="height" constant="32" id="nt5-cR-kGE"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <state key="normal" title="Сохранить">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="saveButtonTapped:" destination="NiA-PM-iWw" eventType="touchUpInside" id="5uo-dg-obE"/>
+                                </connections>
+                            </button>
+                        </subviews>
                         <viewLayoutGuide key="safeArea" id="YRR-I8-1w0"/>
-                        <color key="backgroundColor" systemColor="systemYellowColor"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="RUA-hd-hD7" firstAttribute="leading" secondItem="YRR-I8-1w0" secondAttribute="leading" id="E1d-6w-DoS"/>
+                            <constraint firstItem="RUA-hd-hD7" firstAttribute="top" secondItem="YRR-I8-1w0" secondAttribute="top" constant="32" id="Utr-SK-dsr"/>
+                            <constraint firstItem="vud-vl-csU" firstAttribute="centerX" secondItem="grL-sB-FWH" secondAttribute="centerX" id="jcp-ao-HOU"/>
+                            <constraint firstItem="RUA-hd-hD7" firstAttribute="trailing" secondItem="YRR-I8-1w0" secondAttribute="trailing" id="lLm-gA-cW5"/>
+                            <constraint firstItem="vud-vl-csU" firstAttribute="top" secondItem="RUA-hd-hD7" secondAttribute="bottom" constant="18" id="zzT-6T-tQB"/>
+                        </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Settings" id="Lfu-9q-Vex"/>
+                    <tabBarItem key="tabBarItem" title="Настройки" image="gear" landscapeImage="gear" selectedImage="gear" id="Lfu-9q-Vex"/>
+                    <connections>
+                        <outlet property="saveButton" destination="vud-vl-csU" id="yYV-gm-YHN"/>
+                        <outlet property="venueTypePickerVeiw" destination="RUA-hd-hD7" id="cA4-OZ-zcR"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Fwx-Dn-6Jd" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1006" y="-591"/>
+            <point key="canvasLocation" x="1005.7971014492755" y="-591.29464285714278"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="acx-KY-e1c">
@@ -61,6 +96,7 @@
                 <tabBarController automaticallyAdjustsScrollViewInsets="NO" id="qTM-md-JVb" sceneMemberID="viewController">
                     <toolbarItems/>
                     <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="xDB-ns-hR8">
+                        <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </tabBar>
@@ -75,11 +111,10 @@
         </scene>
     </scenes>
     <resources>
+        <image name="gear" width="25.5" height="25"/>
+        <image name="map" width="25" height="25"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
-        <systemColor name="systemYellowColor">
-            <color red="1" green="0.80000000000000004" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

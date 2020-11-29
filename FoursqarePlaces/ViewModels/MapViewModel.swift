@@ -30,6 +30,9 @@ internal class MapViewModel{
     //If is Initial setup
     private var isInitialSetup = true
     
+    //Check if granted access to location service
+    var isGranted = BehaviorRelay<Bool>(value: false)
+    
     //Get new user location
     var userLocation: BehaviorRelay<CLLocation> = BehaviorRelay(value: CLLocation())
     
@@ -45,10 +48,8 @@ internal class MapViewModel{
     
     //MARK: - Initilizer
     init() {
-        userLocationManager.isAccess.filter{ $0 }.subscribe {[unowned self] _ in
-            self.userLocationManager.currentLocation.bind(to: self.userLocation).disposed(by: self.disposeBag)
-        }.disposed(by: disposeBag)
-        
+        userLocationManager.isAccess.bind(to: isGranted).disposed(by: disposeBag)
+        self.userLocationManager.currentLocation.bind(to: self.userLocation).disposed(by: self.disposeBag)
     }
     
     //MARK: - Methods
@@ -61,7 +62,7 @@ internal class MapViewModel{
     //Checking new user location is in accuracy region
     private func isUserMoved (_ newLocation: CLLocation) -> Bool {
         let coveredDistance = newLocation.distance(from: self.previousLocation)
-        return coveredDistance <= self.accuracyRegionRadius
+        return self.accuracyRegionRadius <= coveredDistance
     }
     
     //Make MapView Region
@@ -83,19 +84,21 @@ internal class MapViewModel{
     
     //Load venues data in location
     private func loadVenuesData(for location: CLLocation) {
-        
-        let apiBuilder = FoursquareAPIBuilder()
-        apiBuilder.setLocation(longitude: location.coordinate.longitude, latitude: location.coordinate.latitude)
-        apiBuilder.setVenue(type: venueType)
-        
-        guard let resource = apiBuilder.buildFoursquareAPI() else { return }
-        
-        
-        NetworkDataFetcher.shared.fetchCategories(api: resource) {[unowned self] venueResponse in
+        isGranted.filter { $0 == true }.subscribe {[unowned self] _ in
+            let apiBuilder = FoursquareAPIBuilder()
+            apiBuilder.setLocation(longitude: location.coordinate.longitude, latitude: location.coordinate.latitude)
+            apiBuilder.setVenue(type: self.venueType)
             
-            guard let venueResponse = venueResponse else { return }
-            let v = venueResponse.response.groups.compactMap { $0 }.flatMap { $0.items }.compactMap {$0.venue}
-            self.venues.accept(v)
-        }
+            guard let resource = apiBuilder.buildFoursquareAPI() else { return }
+            
+            
+            NetworkDataFetcher.shared.fetchCategories(api: resource) {[unowned self] venueResponse in
+                
+                guard let venueResponse = venueResponse else { return }
+                let v = venueResponse.response.groups.compactMap { $0 }.flatMap { $0.items }.compactMap {$0.venue}
+                self.venues.accept(v)
+            }
+        }.disposed(by: disposeBag)
+        
     }
 }

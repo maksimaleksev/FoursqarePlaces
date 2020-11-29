@@ -27,12 +27,6 @@ class MapViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupMapViewController()
-        
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        setupAnnotations()
     }
     
     //MARK: - VC Methods
@@ -42,25 +36,34 @@ class MapViewController: UIViewController {
         mapView.showsUserLocation = true
         mapView.delegate = self
         setUserLocationOnMapView()
+        setupAnnotations()
     }
     
     //Setup user location on the mapView
     func setUserLocationOnMapView() {
-        
-        viewModel.userLocation.asDriver().drive { [unowned self] userLocation in
-            guard let mapView = self.mapView, self.isMapViewLoadMap else { return }
+        viewModel.isGranted.filter{ $0 == false }.subscribe {[unowned self] isGranted in
             
-            if let region = viewModel.makeMapViewRegion(for: userLocation){
-                mapView.setCenter(userLocation.coordinate, animated: true)
-                mapView.setRegion(region, animated: true)
-            }
-            
+            self.viewModel.userLocation.asDriver().drive { [unowned self] userLocation in
+                guard let mapView = self.mapView, self.isMapViewLoadMap else { return }
+                
+                if let region = viewModel.makeMapViewRegion(for: userLocation){
+                    mapView.setCenter(userLocation.coordinate, animated: true)
+                    mapView.setRegion(region, animated: true)
+                }
+                
+            }.disposed(by: self.disposedBag)
         }.disposed(by: disposedBag)
+
+        
     }
     
     
     //Setup annotations
     func setupAnnotations() {
+        
+        let annotations = mapView.annotations.filter({ !($0 is MKUserLocation) })
+        mapView.removeAnnotations(annotations)
+        
         viewModel.venues.asDriver().drive { venues in
             
             venues.forEach {[unowned self] venue in

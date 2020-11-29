@@ -13,3 +13,23 @@ enum VenueType: String {
     case shop
     case trending
 }
+
+extension VenueType {
+    
+    var ruString: String {
+        
+        switch self {
+        case .food:
+            return "Рестораны"
+        case .coffee:
+            return "Кофейни"
+        case .shop:
+            return "Магазины"
+        case .trending:
+            return "Тренды"
+        }
+    }
+    
+}
+
+extension VenueType: CaseIterable { }

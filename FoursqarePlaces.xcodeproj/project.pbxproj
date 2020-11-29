@@ -14,6 +14,8 @@
 		7BA3413925703B8B004997F7 /* NetworkDataFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BA3413825703B8B004997F7 /* NetworkDataFetcher.swift */; };
 		7BDF23D6257281DC000BB386 /* MapViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BDF23D5257281DC000BB386 /* MapViewModel.swift */; };
 		7BDF23DF2572EBE7000BB386 /* AnnotationBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BDF23DE2572EBE7000BB386 /* AnnotationBuilder.swift */; };
+		7BDF23E22573C04A000BB386 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BDF23E12573C04A000BB386 /* SettingsViewController.swift */; };
+		7BDF23E82573C33E000BB386 /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BDF23E72573C33E000BB386 /* SettingsViewModel.swift */; };
 		7BF96C53256E9E2400FF17C2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF96C52256E9E2400FF17C2 /* AppDelegate.swift */; };
 		7BF96C57256E9E2400FF17C2 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF96C56256E9E2400FF17C2 /* MapViewController.swift */; };
 		7BF96C5A256E9E2400FF17C2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7BF96C58256E9E2400FF17C2 /* Main.storyboard */; };
@@ -33,6 +35,8 @@
 		7BA3413825703B8B004997F7 /* NetworkDataFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkDataFetcher.swift; sourceTree = "<group>"; };
 		7BDF23D5257281DC000BB386 /* MapViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewModel.swift; sourceTree = "<group>"; };
 		7BDF23DE2572EBE7000BB386 /* AnnotationBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationBuilder.swift; sourceTree = "<group>"; };
+		7BDF23E12573C04A000BB386 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
+		7BDF23E72573C33E000BB386 /* SettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
 		7BF96C4F256E9E2400FF17C2 /* FoursqarePlaces.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FoursqarePlaces.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7BF96C52256E9E2400FF17C2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7BF96C56256E9E2400FF17C2 /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
@@ -120,6 +124,24 @@
 			path = NetworkService;
 			sourceTree = "<group>";
 		};
+		7BDF23E42573C2BA000BB386 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				7BDF23D5257281DC000BB386 /* MapViewModel.swift */,
+				7BDF23E72573C33E000BB386 /* SettingsViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		7BDF23E52573C2D7000BB386 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				7BF96C56256E9E2400FF17C2 /* MapViewController.swift */,
+				7BDF23E12573C04A000BB386 /* SettingsViewController.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
 		7BF96C46256E9E2400FF17C2 = {
 			isa = PBXGroup;
 			children = (
@@ -142,8 +164,8 @@
 			isa = PBXGroup;
 			children = (
 				7BF96C52256E9E2400FF17C2 /* AppDelegate.swift */,
-				7BF96C56256E9E2400FF17C2 /* MapViewController.swift */,
-				7BDF23D5257281DC000BB386 /* MapViewModel.swift */,
+				7BDF23E52573C2D7000BB386 /* View */,
+				7BDF23E42573C2BA000BB386 /* ViewModels */,
 				7B811DCD2571664300E6E0DF /* Helpers */,
 				7BF96C7F256FBE0D00FF17C2 /* Models */,
 				7B86D210256EC56700FCA9B6 /* Services */,
@@ -298,8 +320,10 @@
 				7BF96C6F256EA68700FF17C2 /* UserLocationManager.swift in Sources */,
 				7BDF23DF2572EBE7000BB386 /* AnnotationBuilder.swift in Sources */,
 				7BF96C73256FA31B00FF17C2 /* FoursquareAPIBuilder.swift in Sources */,
+				7BDF23E22573C04A000BB386 /* SettingsViewController.swift in Sources */,
 				7BF96C77256FA92700FF17C2 /* VenueType.swift in Sources */,
 				7BDF23D6257281DC000BB386 /* MapViewModel.swift in Sources */,
+				7BDF23E82573C33E000BB386 /* SettingsViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
