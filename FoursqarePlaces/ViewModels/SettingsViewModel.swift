@@ -11,19 +11,26 @@ import RxCocoa
 
 internal final class SettingsViewModel {
     
+    //MARK: - Constants and variables
+    //Data for venuePickerView
     let venuesType: BehaviorRelay<[String]> = BehaviorRelay(value: VenueType.allCases.map{ $0.ruString})
     
-    //Picker controller components
+    //venuePickerView number of components
     var componentsNumber: Int { return 1 }
     
-    //Picker controller selected item
-    private var selectedItem: VenueType?
-    var selectedRow: Int?
+    //To get and set row in venuePickerView
+    var selectedRow: Int
     
+    //MARK: - Init
+    init() {
+        self.selectedRow = AppSettings.shared.selectedRowInVenuePickerView
+    }
     
-    //MARK:- Methods
+    //MARK: - Methods
     
-    func setSelectedItem (_ item: VenueType) {
-        self.selectedItem = item
+    //Set settings for app
+    func set(row: Int, and venueType: VenueType) {
+        AppSettings.shared.venueType.accept(venueType)
+        AppSettings.shared.selectedRowInVenuePickerView = row
     }
 }

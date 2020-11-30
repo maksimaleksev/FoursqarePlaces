@@ -31,11 +31,9 @@ class SettingsViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        if self.traitCollection.userInterfaceStyle == .dark {
-            view.backgroundColor = .black
-               }
-
+        additionalViewControllerSetup()
     }
+    
     override func viewDidLayoutSubviews() {
         saveButton.layer.cornerRadius = 5
     }
@@ -44,19 +42,19 @@ class SettingsViewController: UIViewController {
     
     @IBAction func saveButtonTapped(_ sender: UIButton) {
         
-        guard let row = viewModel.selectedRow,
-              let venueType = VenueType.convertToVenueType(viewModel.venuesType.value[row])
-        else { return }
-        
-        print (venueType)
+        let row = viewModel.selectedRow
+        guard let venueType = VenueType.convertToVenueType(viewModel.venuesType.value[row]) else { return }
+        viewModel.set(row: row, and: venueType)
+        self.tabBarController?.selectedIndex = 0
     }
     
     //MARK: - Methods
     
+    //For setup VC in viewDidLoad
     private func setupViewController() {
         //Set data for venueTypePickerVeiw
         viewModel.venuesType.bind(to: venueTypePickerVeiw.rx.itemTitles){ row, element in
-                return element
+            return element
         }.disposed(by: disposeBag)
         
         //Get selected item in venueTypePickerVeiw
@@ -69,6 +67,14 @@ class SettingsViewController: UIViewController {
                     break
                 }
             }.disposed(by: disposeBag)
+    }
+    
+    //For setup VC in viewWillAppear
+    private func additionalViewControllerSetup() {
+        if self.traitCollection.userInterfaceStyle == .dark {
+            view.backgroundColor = .black
+        }
+        venueTypePickerVeiw.selectRow(viewModel.selectedRow, inComponent: 0, animated: true)
     }
 }
 

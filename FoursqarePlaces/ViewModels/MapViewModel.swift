@@ -25,7 +25,13 @@ internal class MapViewModel{
     //Accuracy region need to determine when to request new venues
     private let accuracyRegionRadius: CLLocationDistance = 100
     
+    //Annotation identifier
+    let annotationIdentifier = "VenueAnnotation"
+    
     //MARK: - Variables
+    
+    //Is Map view loaded?
+    var isMapViewLoadMap = false
     
     //If is Initial setup
     private var isInitialSetup = true
@@ -35,9 +41,6 @@ internal class MapViewModel{
     
     //Get new user location
     var userLocation: BehaviorRelay<CLLocation> = BehaviorRelay(value: CLLocation())
-    
-    //Get venue type
-    private var venueType: VenueType = .coffee
     
     //To get previous location
     private var previousLocation = CLLocation()
@@ -50,6 +53,7 @@ internal class MapViewModel{
     init() {
         userLocationManager.isAccess.bind(to: isGranted).disposed(by: disposeBag)
         self.userLocationManager.currentLocation.bind(to: self.userLocation).disposed(by: self.disposeBag)
+        
     }
     
     //MARK: - Methods
@@ -84,21 +88,28 @@ internal class MapViewModel{
     
     //Load venues data in location
     private func loadVenuesData(for location: CLLocation) {
-        isGranted.filter { $0 == true }.subscribe {[unowned self] _ in
-            let apiBuilder = FoursquareAPIBuilder()
-            apiBuilder.setLocation(longitude: location.coordinate.longitude, latitude: location.coordinate.latitude)
-            apiBuilder.setVenue(type: self.venueType)
-            
-            guard let resource = apiBuilder.buildFoursquareAPI() else { return }
-            
-            
-            NetworkDataFetcher.shared.fetchCategories(api: resource) {[unowned self] venueResponse in
+        isGranted.filter { $0 == true }.subscribe (onNext: {[unowned self] _ in
+               
+            AppSettings.shared.venueType.subscribe(onNext: {[unowned self] venueType in
                 
-                guard let venueResponse = venueResponse else { return }
-                let v = venueResponse.response.groups.compactMap { $0 }.flatMap { $0.items }.compactMap {$0.venue}
-                self.venues.accept(v)
-            }
-        }.disposed(by: disposeBag)
+                let apiBuilder = FoursquareAPIBuilder()
+                apiBuilder.setLocation(longitude: location.coordinate.longitude, latitude: location.coordinate.latitude)
+                apiBuilder.setVenue(type: venueType)
+                
+                guard let resource = apiBuilder.buildFoursquareAPI() else { return }
+                
+                
+                NetworkDataFetcher.shared.fetchCategories(api: resource) {[unowned self] venueResponse in
+                    
+                    guard let venueResponse = venueResponse else { return }
+                    let v = venueResponse.response.groups.compactMap { $0 }.flatMap { $0.items }.compactMap {$0.venue}
+                    self.venues.accept(v)
+                }
+                
+            }).disposed(by: self.disposeBag)
+                
+
+        }).disposed(by: disposeBag)
         
     }
 }

@@ -13,11 +13,9 @@ class MapViewController: UIViewController {
     
     //MARK: - Services var
     
-    private var isMapViewLoadMap = false
     private let disposedBag = DisposeBag()
     private var viewModel: MapViewModel = MapViewModel()
-    private let annotationIdentifier = "VenueAnnotation"
-    
+        
     //MARK: - IBOutlets
     
     @IBOutlet weak var mapView: MKMapView!
@@ -32,7 +30,7 @@ class MapViewController: UIViewController {
     //MARK: - VC Methods
     
     //Setup VC
-    func setupMapViewController() {
+    private func setupMapViewController() {
         mapView.showsUserLocation = true
         mapView.delegate = self
         setUserLocationOnMapView()
@@ -40,11 +38,11 @@ class MapViewController: UIViewController {
     }
     
     //Setup user location on the mapView
-    func setUserLocationOnMapView() {
-        viewModel.isGranted.filter{ $0 == false }.subscribe {[unowned self] isGranted in
+    private func setUserLocationOnMapView() {
+        viewModel.isGranted.filter{ $0 == false }.subscribe(onNext: {[unowned self] _ in
             
             self.viewModel.userLocation.asDriver().drive { [unowned self] userLocation in
-                guard let mapView = self.mapView, self.isMapViewLoadMap else { return }
+                guard let mapView = self.mapView, self.viewModel.isMapViewLoadMap else { return }
                 
                 if let region = viewModel.makeMapViewRegion(for: userLocation){
                     mapView.setCenter(userLocation.coordinate, animated: true)
@@ -52,19 +50,16 @@ class MapViewController: UIViewController {
                 }
                 
             }.disposed(by: self.disposedBag)
-        }.disposed(by: disposedBag)
-
-        
+        }).disposed(by: disposedBag)
     }
     
     
     //Setup annotations
-    func setupAnnotations() {
+    private func setupAnnotations() {
         
-        let annotations = mapView.annotations.filter({ !($0 is MKUserLocation) })
-        mapView.removeAnnotations(annotations)
-        
-        viewModel.venues.asDriver().drive { venues in
+        viewModel.venues.asDriver().drive { [removeAppleMapOverlays] venues in
+            
+            removeAppleMapOverlays()
             
             venues.forEach {[unowned self] venue in
                 
@@ -79,6 +74,14 @@ class MapViewController: UIViewController {
         }.disposed(by: disposedBag)
         
     }
+    
+    //Removing old annotations
+    private func removeAppleMapOverlays() {
+        let overlays = self.mapView.overlays
+        self.mapView.removeOverlays(overlays)
+        let annotations = self.mapView.annotations.filter { $0 !== self.mapView.userLocation }
+        self.mapView.removeAnnotations(annotations)
+    }
 }
 
 
@@ -86,17 +89,17 @@ class MapViewController: UIViewController {
 extension MapViewController: MKMapViewDelegate {
     
     func mapViewDidFinishLoadingMap(_ mapView: MKMapView) {
-        isMapViewLoadMap = true
+        viewModel.isMapViewLoadMap = true
     }
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         
         guard annotation is MKPointAnnotation else { return nil }
         
-        var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: annotationIdentifier)
+        var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: viewModel.annotationIdentifier)
         
         if annotationView == nil {
-            annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: annotationIdentifier)
+            annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: viewModel.annotationIdentifier)
             annotationView!.canShowCallout = true
         } else {
             annotationView!.annotation = annotation

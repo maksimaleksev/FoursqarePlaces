@@ -50,7 +50,7 @@ internal class FoursquareAPIBuilder: FoursquareAPIBuilderProtocol {
         self.type = type
     }
     
-    //Build build request for API Foursquare
+    //Build request for API Foursquare
     func buildFoursquareAPI() -> FoursquareAPI? {
         guard let type = type else {
             print("Can't build URL cause ShopType doesn't set")

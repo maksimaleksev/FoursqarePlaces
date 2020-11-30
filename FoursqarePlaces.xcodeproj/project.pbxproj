@@ -16,6 +16,7 @@
 		7BDF23DF2572EBE7000BB386 /* AnnotationBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BDF23DE2572EBE7000BB386 /* AnnotationBuilder.swift */; };
 		7BDF23E22573C04A000BB386 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BDF23E12573C04A000BB386 /* SettingsViewController.swift */; };
 		7BDF23E82573C33E000BB386 /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BDF23E72573C33E000BB386 /* SettingsViewModel.swift */; };
+		7BDF23EC257546DC000BB386 /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BDF23EB257546DC000BB386 /* AppSettings.swift */; };
 		7BF96C53256E9E2400FF17C2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF96C52256E9E2400FF17C2 /* AppDelegate.swift */; };
 		7BF96C57256E9E2400FF17C2 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF96C56256E9E2400FF17C2 /* MapViewController.swift */; };
 		7BF96C5A256E9E2400FF17C2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7BF96C58256E9E2400FF17C2 /* Main.storyboard */; };
@@ -37,6 +38,7 @@
 		7BDF23DE2572EBE7000BB386 /* AnnotationBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationBuilder.swift; sourceTree = "<group>"; };
 		7BDF23E12573C04A000BB386 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		7BDF23E72573C33E000BB386 /* SettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
+		7BDF23EB257546DC000BB386 /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
 		7BF96C4F256E9E2400FF17C2 /* FoursqarePlaces.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FoursqarePlaces.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7BF96C52256E9E2400FF17C2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7BF96C56256E9E2400FF17C2 /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
@@ -84,6 +86,7 @@
 		7B811DCD2571664300E6E0DF /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				7BDF23EB257546DC000BB386 /* AppSettings.swift */,
 				7BDF23DE2572EBE7000BB386 /* AnnotationBuilder.swift */,
 			);
 			path = Helpers;
@@ -318,6 +321,7 @@
 				7BA34136257034FC004997F7 /* NetworkService.swift in Sources */,
 				7BF96C53256E9E2400FF17C2 /* AppDelegate.swift in Sources */,
 				7BF96C6F256EA68700FF17C2 /* UserLocationManager.swift in Sources */,
+				7BDF23EC257546DC000BB386 /* AppSettings.swift in Sources */,
 				7BDF23DF2572EBE7000BB386 /* AnnotationBuilder.swift in Sources */,
 				7BF96C73256FA31B00FF17C2 /* FoursquareAPIBuilder.swift in Sources */,
 				7BDF23E22573C04A000BB386 /* SettingsViewController.swift in Sources */,
