@@ -30,6 +30,25 @@ extension VenueType {
         }
     }
     
+    static func convertToVenueType(_ text: String) -> VenueType? {
+        
+        switch text {
+        
+        case "Рестораны":
+            return .food
+        case "Кофейни":
+            return .coffee
+        case "Магазины":
+            return .shop
+        case "Тренды":
+            return .trending
+        default:
+            print("Unknown VenueType")
+            return nil
+        }
+    }
+    
 }
+
 
 extension VenueType: CaseIterable { }

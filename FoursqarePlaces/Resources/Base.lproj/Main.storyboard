@@ -49,10 +49,6 @@
                         <subviews>
                             <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RUA-hd-hD7">
                                 <rect key="frame" x="0.0" y="76" width="414" height="216"/>
-                                <connections>
-                                    <outlet property="dataSource" destination="NiA-PM-iWw" id="TdR-yI-trb"/>
-                                    <outlet property="delegate" destination="NiA-PM-iWw" id="Dtc-vw-mPW"/>
-                                </connections>
                             </pickerView>
                             <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vud-vl-csU">
                                 <rect key="frame" x="171" y="310" width="72" height="32"/>

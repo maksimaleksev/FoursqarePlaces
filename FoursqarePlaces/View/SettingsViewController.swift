@@ -11,7 +11,10 @@ import RxSwift
 
 class SettingsViewController: UIViewController {
     
-    //MARK: - Variables
+    //MARK: - Services
+    let disposeBag = DisposeBag()
+    
+    //MARK: - View Model
     
     var viewModel = SettingsViewModel()
     
@@ -38,35 +41,34 @@ class SettingsViewController: UIViewController {
     }
     
     //MARK: - @IBActions
+    
     @IBAction func saveButtonTapped(_ sender: UIButton) {
-        self.tabBarController?.selectedIndex = 0
+        
+        guard let row = viewModel.selectedRow,
+              let venueType = VenueType.convertToVenueType(viewModel.venuesType.value[row])
+        else { return }
+        
+        print (venueType)
     }
     
     //MARK: - Methods
     
     private func setupViewController() {
+        //Set data for venueTypePickerVeiw
+        viewModel.venuesType.bind(to: venueTypePickerVeiw.rx.itemTitles){ row, element in
+                return element
+        }.disposed(by: disposeBag)
+        
+        //Get selected item in venueTypePickerVeiw
+        venueTypePickerVeiw.rx.itemSelected
+            .subscribe {[unowned self] (event) in
+                switch event {
+                case .next(let selected):
+                    self.viewModel.selectedRow = selected.row
+                default:
+                    break
+                }
+            }.disposed(by: disposeBag)
     }
 }
 
-
-//MARK: - UIPickerViewDataSource, UIPickerViewDelegate
-
-extension SettingsViewController: UIPickerViewDataSource, UIPickerViewDelegate {
-    
-    func numberOfComponents(in pickerView: UIPickerView) -> Int {
-        return viewModel.componentsNumber
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return viewModel.venuesType.count
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return viewModel.venuesType[row]
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        print(viewModel.venuesType[row])
-    }
-    
-}

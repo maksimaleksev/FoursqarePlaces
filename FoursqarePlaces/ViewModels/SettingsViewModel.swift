@@ -6,19 +6,24 @@
 //
 
 import Foundation
+import RxSwift
+import RxCocoa
 
-class SettingsViewModel {
+internal final class SettingsViewModel {
     
-    //Picker controller items
-//        let venuesType = ["Кофейни", "Рестораны", "Магазины", "Тренды"]
-    
-    let venuesType: [String] = VenueType.allCases.map { $0.ruString }
+    let venuesType: BehaviorRelay<[String]> = BehaviorRelay(value: VenueType.allCases.map{ $0.ruString})
     
     //Picker controller components
-    let componentsNumber = 1
+    var componentsNumber: Int { return 1 }
     
     //Picker controller selected item
-    var selectedItem: String?
-    var selectedIndex: Int?
+    private var selectedItem: VenueType?
+    var selectedRow: Int?
     
+    
+    //MARK:- Methods
+    
+    func setSelectedItem (_ item: VenueType) {
+        self.selectedItem = item
+    }
 }
