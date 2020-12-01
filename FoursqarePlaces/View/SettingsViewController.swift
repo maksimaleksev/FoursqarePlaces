@@ -67,14 +67,35 @@ class SettingsViewController: UIViewController {
                     break
                 }
             }.disposed(by: disposeBag)
+        
+        //Set VC when app become active
+        viewModel.didAppBecomeActive.subscribe (onNext:{ [additionalViewControllerSetup] isActive in
+            
+            guard isActive else { return }
+            additionalViewControllerSetup()
+        }).disposed(by: disposeBag)
     }
     
     //For setup VC in viewWillAppear
     private func additionalViewControllerSetup() {
-        if self.traitCollection.userInterfaceStyle == .dark {
-            view.backgroundColor = .black
-        }
+        
+        setBackgroundViewColor()
         venueTypePickerVeiw.selectRow(viewModel.selectedRow, inComponent: 0, animated: true)
+    }
+    
+    private func setBackgroundViewColor() {
+        
+        switch self.traitCollection.userInterfaceStyle {
+        
+        case .unspecified:
+            view.backgroundColor = .white
+        case .light:
+            view.backgroundColor = .white
+        case .dark:
+            view.backgroundColor = .black
+        @unknown default:
+            view.backgroundColor = .white
+        }
     }
 }
 

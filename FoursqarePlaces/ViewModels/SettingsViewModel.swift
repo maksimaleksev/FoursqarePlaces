@@ -11,6 +11,8 @@ import RxCocoa
 
 internal final class SettingsViewModel {
     
+    let disposeBag = DisposeBag()
+    
     //MARK: - Constants and variables
     //Data for venuePickerView
     let venuesType: BehaviorRelay<[String]> = BehaviorRelay(value: VenueType.allCases.map{ $0.ruString})
@@ -21,9 +23,14 @@ internal final class SettingsViewModel {
     //To get and set row in venuePickerView
     var selectedRow: Int
     
-    //MARK: - Init
+    //Did app Become active
+    var didAppBecomeActive: BehaviorRelay<Bool> = BehaviorRelay(value: false)
+    
+    //MARK: - Initializer
     init() {
         self.selectedRow = AppSettings.shared.selectedRowInVenuePickerView
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        appDelegate.didBecomeActive.bind(to: didAppBecomeActive).disposed(by: disposeBag)
     }
     
     //MARK: - Methods
