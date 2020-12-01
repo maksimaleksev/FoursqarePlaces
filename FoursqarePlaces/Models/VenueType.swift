@@ -20,9 +20,9 @@ extension VenueType {
         
         switch self {
         case .food:
-            return "Рестораны"
+            return "Еда"
         case .coffee:
-            return "Кофейни"
+            return "Кофе"
         case .shop:
             return "Магазины"
         case .trending:
@@ -34,9 +34,9 @@ extension VenueType {
         
         switch text {
         
-        case "Рестораны":
+        case "Еда":
             return .food
-        case "Кофейни":
+        case "Кофе":
             return .coffee
         case "Магазины":
             return .shop

@@ -80,7 +80,7 @@ class SettingsViewController: UIViewController {
     private func additionalViewControllerSetup() {
         
         setBackgroundViewColor()
-        venueTypePickerVeiw.selectRow(viewModel.selectedRow, inComponent: 0, animated: true)
+        venueTypePickerVeiw.selectRow(viewModel.settedRow, inComponent: 0, animated: true)
     }
     
     private func setBackgroundViewColor() {

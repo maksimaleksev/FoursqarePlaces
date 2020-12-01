@@ -64,7 +64,7 @@ class MapViewController: UIViewController {
             venues.forEach {[unowned self] venue in
                 
                 let builder = AnnotationBuilder()
-                builder.setAnnotationTitle(venue.name)
+                builder.setAnnotationTitle(venue.name.firstCapitalized)
                 builder.setAnnotationCoordinate(latitude: venue.location.lat, longitude: venue.location.lng)
                 guard let annotation = builder.makeAnnotation() else { return }
                 self.mapView.addAnnotation(annotation)

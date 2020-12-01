@@ -23,6 +23,10 @@ internal final class SettingsViewModel {
     //To get and set row in venuePickerView
     var selectedRow: Int
     
+    var settedRow: Int {
+        return AppSettings.shared.selectedRowInVenuePickerView
+    }
+    
     //Did app Become active
     var didAppBecomeActive: BehaviorRelay<Bool> = BehaviorRelay(value: false)
     
@@ -39,5 +43,6 @@ internal final class SettingsViewModel {
     func set(row: Int, and venueType: VenueType) {
         AppSettings.shared.venueType.accept(venueType)
         AppSettings.shared.selectedRowInVenuePickerView = row
+        AppSettings.shared.storeData()
     }
 }
