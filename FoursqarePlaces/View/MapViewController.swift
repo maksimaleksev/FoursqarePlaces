@@ -20,11 +20,25 @@ class MapViewController: UIViewController {
     
     @IBOutlet weak var mapView: MKMapView!
     
+    //MARK: - Setup Center User Button
+    
+    let centerUserButton: UIButton = {
+       let button = UIButton()
+        button.clipsToBounds = true
+        button.setImage(UIImage(named: "location"), for: .normal)
+        button.backgroundColor = #colorLiteral(red: 0.006842956413, green: 0.4770780206, blue: 0.9985149503, alpha: 1)
+        return button
+    }()
+    
     //MARK: - Lifecycle methods
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupMapViewController()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        setupButtonLayer()
     }
     
     //MARK: - VC Methods
@@ -33,8 +47,39 @@ class MapViewController: UIViewController {
     private func setupMapViewController() {
         mapView.showsUserLocation = true
         mapView.delegate = self
+        setupButtonView()
         setUserLocationOnMapView()
         setupAnnotations()
+    }
+    
+    //Setup centerUserButton
+    private func setupButtonView() {
+        centerUserButton.addTarget(self, action: #selector(centerUserButtonTapped), for: .touchUpInside)
+        centerUserButton.translatesAutoresizingMaskIntoConstraints = false
+        mapView.addSubview(centerUserButton)
+        
+        NSLayoutConstraint.activate([
+            centerUserButton.trailingAnchor.constraint(equalTo: mapView.trailingAnchor, constant: -32),
+            centerUserButton.bottomAnchor.constraint(equalTo: mapView.bottomAnchor, constant: -32),
+            centerUserButton.widthAnchor.constraint(equalToConstant: 50),
+            centerUserButton.heightAnchor.constraint(equalToConstant: 50)
+        ])
+    }
+    
+    @objc func centerUserButtonTapped() {
+        mapView.setCenter(viewModel.userLocation.value.coordinate, animated: true)
+    }
+    
+    //Setup button layer
+    func setupButtonLayer() {
+        centerUserButton.layer.cornerRadius = centerUserButton.bounds.height/2
+        
+        //Setup button shadow
+        centerUserButton.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.25).cgColor
+        centerUserButton.layer.shadowOpacity = 1
+        centerUserButton.layer.shadowRadius = 4
+        centerUserButton.layer.shadowOffset = CGSize(width: 0, height: 4)
+        centerUserButton.layer.masksToBounds = false
     }
     
     //Setup user location on the mapView
